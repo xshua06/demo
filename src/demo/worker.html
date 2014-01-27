@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>html5 web worker</title>
+	</head>
+	
+	<body>
+		<h3>不同线程间通信</h3>
+		<script>
+			(function(win){
+				var wk, 
+					handler,
+					msg = {
+						nonsupport:"你的浏览器不支持web worker",
+						initialize:"web worker未初始化"
+					},
+					listenFn = [];
+				
+				wk = {
+					support: function(){
+						return typeof Worker !== "undefined";
+					},
+					start: function(url){
+						if(!this.support){
+							return msg.nonsupport;
+						}
+						
+						this.stop();
+						handler = new Worker(url || "worker.js");
+						handler.onmessage = function(e){
+							if(listenFn.length == 0){
+								console.info(e);
+								return;
+							}
+							for(var i = 0; i < listenFn.length; i++){
+								listenFn[i](e);
+							}
+						}
+						return handler;
+					},
+					stop: function(){
+						if(handler){
+							handler.terminate();
+						}else{
+							if(!this.support()){
+								return msg.nonsupport;
+							}
+							return msg.initialize;
+						}
+					},
+					addListener: function(fn){
+						if(typeof fn == "function"){
+							listenFn.push(fn);
+						}
+					},
+					destory: function(){
+						handler = null;
+						listenFn = [];
+					},
+					getHandler: function(){
+						if(handler){
+							return handler;
+						}else{
+							if(!this.support()){
+								return msg.nonsupport;
+							}
+							return msg.initialize;
+						}
+					}
+				}
+				
+				win.worker = wk;
+			})(window);
+			
+			//实例
+			var wk = worker.start("worker.js");
+			
+		</script>
+	</body>
+</html>

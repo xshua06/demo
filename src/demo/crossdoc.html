@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>html5 跨文档通信</title>
+	</head>
+	
+	<body>
+		<h3>实例1，利用window.opener跨窗口通信</h3>
+		<a href="crossdoc-type1-1.html" target="_blank">窗口1</a> <a href="crossdoc-type1-2.html" target="_blank">窗口2</a>
+		<script>
+			(function(win){
+				var win1, win2;
+				win.onmessage = function(e){
+					if(win1 && win2){
+						if(e.source == win1){
+							console.info(win1.location.href);
+							win2.postMessage(e.data, e.origin);
+						}
+						if(e.source == win2){
+							console.info(win2.location.href);
+							win1.postMessage(e.data, e.origin);
+						}
+						return;
+					}
+					if(!win1){
+						win1 = e.source;
+						console.info(e.data);
+					}
+					if(!win2 && win1 != e.source){
+						win2 = e.source;
+						console.info(e.data);
+					}
+				}
+			})(window);
+		</script>
+	</body>
+</html>

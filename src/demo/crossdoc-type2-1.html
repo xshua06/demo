@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>html5 跨文档通信</title>
+	</head>
+	
+	<body>
+		
+		<script src="crossdoc-type2.js"></script>
+		<script>
+			(function(){
+				communication.init();
+				communication.addListener(function(d){
+					console.info("监视状态:", d.newValue);
+				});
+			})();
+		</script>
+		
+	</body>
+</html>
