@@ -1,0 +1,151 @@
+
+
+
+==== 自定义事件 ====
+
+<code>
+
+var dataEvent = {};
+
+dataEvent.fire = function (target, datatype, data) {
+       if ( typeof target == 'string') target = document.body;
+	   if ( document.createEvent) {
+	     var e = document.createEvent('Events'); //W3C创建新事件的写法
+		 e.initEvent('dataavailable', true , false);
+	   } else if (document.createEventObject) {
+	     var e = document.createEventObject(); //IE的创建新事件的写法
+	   } else {
+	     return;
+	   }
+	   e.datatype = datatype;
+	   e.data = data;
+	   if (target.dispatchEvent) {
+	     target.dispatchEvent(e);
+	   } else if (target.fireEvent) {
+	     target.fireEvent('ondataavailable', e);
+	   }
+   }
+   dataEvent.on = function (target, handler) {
+     if (typeof target == 'string') target = document.body;
+	 if (target.addEventListener) {
+	   target.addEventListener('dataavailable', handler, false);
+	 } else if( target.attachEvent) {
+	   target.attachEvent('ondataavailable', handler); //IE 
+	 }
+   }
+
+==== 标题 ====
+
+=== 标题 ===
+
+
+
+
+
+
+
+
+
+
+
+== margin负值用法 ==
+[http://www.w3cplus.com/css/the-definitive-guide-to-using-negative-margins.html margin负值用法]
+
+=== IE6、IE7 margin负值增加高度宽度bug ===
+解决：给父元素触发hasLayout，比如增加zoom:1,子元素也增加position:relative; zoom:1,触发hasLayout。<br />
+demo：
+
+
+<div style="border:1px solid red; margin:0 auto; zoom:1;">
+    <div style="border:1px solid blue; margin:-5px; zoom:1; position:relative;">123</div>
+</div>
+
+
+
+
+
+== margin-top失效 ==
+
+=== 两个嵌套关系的div，内层div的margin-top失效 ===
+
+现象：在一些浏览器中，有两个嵌套关系的div，如果外层div的父元素padding值为0，那么内层div的margin-top或者margin-bottom的值会“转移”给外层div。<br />
+
+原因：父元素没有获得 haslayout 造成 margin-top 无效<br />
+
+解决：
+:# 把margin-top外边距改成padding-top内边距；
+:# 根据实际情况在父元素加：position: absolute、float: left/right、display: inline-block/table-cell (或其他 table 类型)、overflow: hidden/auto；
+
+=== 浮动导致相邻元素margin-top失效 ===
+
+现象：第一个元素浮动，紧接着的兄弟元素的margin-top失效<br />
+原因：<br />
+解决：
+:# 第二个元素增加float属性；
+:# 第一、第二元素之间增加空元素，且清除浮动
+
+=== IE6、7中绝对、固定定位元素导致紧随的兄弟元素margin-top失效 ===
+原因：
+:# 兄弟元素激活的hasLayout；
+:# 兄弟元素是块级元素
+
+解决：
+:# 用padding-top替换margin-top；
+:# 第一、第二元素之间增加空元素；
+:# 调换这两个元素的位置（不推荐）；
+
+
+=== 常见的浏览器下margin出现的bug ===
+
+林林总总写了那么多，最后总结一些浏览器中常见的margin Bug吧，以后遇到margin下的布局问题可以查看这里找到解决的方案，如果你还发现其他关于浏览器下margin的Bug你可以发表留言，核对采纳后我会及时添加进去，感谢你的分享。
+
+* IE6中双边距Bug：
+
+发生场合：当给父元素内第一个浮动元素设置margin-left（元素float:left）或margin-right（元素float:right）时margin加倍。<br />
+
+解决方法：是给浮动元素加上display:inline;CSS属性；或者用padding-left代替margin-left。<br />
+原理分析：块级对象默认的display属性值是block，当设置了浮动的同时，还设置了它的外边距就会出现这种情况。也许你会问：“为什么之后的对象和第一个对象之间就不存在双倍边距的Bug”？因为浮动都有其相对应的对象，只有相对于其父对象的浮动对象才会出现这样的问题。第一个对象是相对父对象的，而之后对象是相对第一个对象的，所以之后对象在设置后不会出现问题。为什么display:inline可以解决这个双边距bug，首先是inline元素或inline-block元素是不存在双边距问题的。然后，float:left等浮动属性可以让inline元素haslayout，会让inline元素表现得跟inline-block元素的特性一样，支持高宽，垂直margin和padding等，所以div class的所有样式可以用在这个display inline的元素上。
+
+* IE6中浮动元素3px间隔Bug：
+
+发生场合：发生在一个元素浮动，然后一个不浮动的元素自然上浮与之靠近会出现的3px的bug。<br />
+解决方法：右边元素也一起浮动；或者为右边元素添加IE6 Hack _margin-left:-3px;从而消除3px间距。<br />
+原理分析：IE6浏览器缺陷Bug。
+
+* IE6/7负margin隐藏Bug：
+
+发生场合：当给一个有hasLayout的父元素内的非hasLayout元素设置负margin时，超出父元素部分不可见。<br />
+解决方法：去掉父元素的hasLayout；或者赋hasLayout给子元素,并添加position:relative;<br />
+原理分析：IE6/7独有的hasLayout产生问题。
+
+* IE6/7下ul/ol标记消失bug：
+
+发生场合：当ul/ol触发了haslayout并且是在ul/ol上写margin-left，前面默认的ul/ol标记会消失。<br />
+解决方法：给li设置margin-left，而不是给ul/ol设置margin-left。<br />
+原理分析：IE6/7浏览器Bug
+
+* IE6/7下margin与absolute元素重叠bug：
+
+发生场合：双栏自适应布局中，左侧元素absolute绝对定位，右侧的margin撑开距离定位。在IE6/7下左侧应用了absolute属性的块级元素与右边的自适应的文字内容重叠。<br />
+解决方法：把左侧块级元素更改为内联元素，比如把div更换为span。<br />
+原理分析：这是由于IE6/IE7浏览器将inline水平标签元素和block水平的标签元素没有加以区分一视同仁渲染了。属于IE6/7浏览器渲染Bug。<br />
+
+* IE6/7/8下auto margin居中bug：
+
+发生场合：给block元素设置margin auto无法居中<br />
+解决方法：出现这种bug的原因通常是没有Doctype，然后触发了ie的quirks mode，加上Doctype声明就可以了。在《打败IE的葵花宝典》里给出的方法是给block元素添加一个width能够解决，但根据本人亲测，加with此种方法是无效的，如果没有Doctype即使给元素添加width也无法让block元素居中。<br />
+原理分析：缺少Doctype声明。
+
+* IE8下input[button | submit] 设置margin:auto无法居中
+
+发生场合：ie8下，如果给像button这样的标签（如button input[type="button"] input[type="submit"]）设置{ display: block; margin:0 auto; }如果不设置宽度的话无法居中。<br />
+解决方法：可以给为input加上宽度<br />
+原理分析：IE8浏览器Bug。
+
+* IE8百分比padding垂直margin bug：
+
+发生场合：当父元素设置了百分比的padding，子元素有垂直的margin的时候，就好像父元素被设置了margin一样。<br />
+解决方法：给父元素加一个overflow:hidden/auto。<br />
+原理分析：IE8浏览器Bug。
+
+</code>
