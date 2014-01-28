@@ -1,0 +1,232 @@
+====== HTML规范 ======
+
+
+
+===== 基本规范 =====
+  * 使用符合语义的标签书写HTML文档，选择恰当的元素表达所需的含义 <html><sup><a href="#fn_html_semantics">html_semantics</a></sup></html>。
+  * 元素的标签和属性名必须小写，属性值必须加双引号。
+  * 元素嵌套遵循 (X)HTML Strict 嵌套规则<html><sup><a href="#fn_html_embed">html_embed</a></sup></html>，推荐使用Firefox插件[[https://addons.mozilla.org/en-US/firefox/addon/249|HTML Validator]]进行检查。
+  * 正确区分自闭合元素和非自闭合元素。<html><span style="color:red;">非法</span></html>闭合包括：<br>..</br>、<script />、<iframe />，非法闭合会导致页面嵌套错误问题<html><sup><a href="#self_closing">self_closing</a></sup></html>。
+  * 通过给元素设置自定义属性来存放与JavaScript交互的数据，属性名格式为data-xx(例如：data-lazyload-url)。
+
+===== 文档模板 =====
+<code html>
+<!doctype html>
+<html>
+<head>
+<meta charset="gbk" />
+<title>Sample page</title>
+<link rel="stylesheet" href="css_example_url" />
+<script src="js_example_url"></script>
+</head>
+<body>
+<div id="page">
+    <div id="header">
+        页头
+    </div>
+    <div id="content">
+        主体
+    </div>
+    <div id="footer">
+        页尾
+    </div>
+</div>
+<script>
+// 你的代码
+</script>
+</body>
+</html>
+</code>
+
+===== DOCTYPE =====
+页面文档类型统一使用HTML5 DOCTYPE<html><sup><a href="#fn_doctype">doctype</a></sup></html>。代码如下：
+<code html>
+<!doctype html>
+</code>
+
+
+
+
+===== 编码 =====
+统一使用GBK编码，声明方法遵循HTML5的规范<html><sup><a href="#fn_charset_meta">charset_meta</a></sup></html>。
+<code html>
+<meta charset="gbk" />
+</code>
+
+===== 注释 =====
+建议对超过10行的页面模块进行注释，以降低开发人员的嵌套成本和后期的维护成本。例如：\\
+<code html>
+<div id="sample">
+    ...
+</div> <!-- #sample END -->
+</code>
+<code html>
+<div class="sample">
+    ...
+</div> <!-- .sample END -->
+</code>
+说明：\\
+  - 注释内容不能以<html>></html>或<html>-></html>开头，也不能包含两个连续的中划线 <html>--</html>
+  - 注释统一以大写的END结尾
+  - 注释占用文件大小，请不要使用大篇幅的注释(as short as possible, as long as necessary.)
+
+
+ 
+
+
+
+
+===== 元素=====
+==== 结构性元素 ====
+=== p ===
+  * 表示段落。
+  * 只能包含内联元素，不能包含块级元素。
+=== div ===
+  * 本身无特殊含义，可用于布局。
+  * 几乎可以包含任何元素。
+=== br ===
+  * 表示换行符。
+=== hr ===
+  * 水平分割线。
+=== h1-h6 ===
+  * h1用于表示当前页面最重要的内容的标题。
+  * 可以通过Web Developer插件的(Information > View Document Outline command)展示标题级别的关系。
+=== blockquote ===
+  * 表示引用，可以包含多个段落。
+  * 请勿纯粹为了缩进而使用blockquote，大部分浏览器默认将blockquote渲染为带有左右缩进。
+=== pre ===
+  * 表示一段格式化好的文本。
+
+==== 头部元素 ====
+=== title ===
+  * 每个页面必须有且仅有一个title元素。<code html><title>淘宝网 - 淘！我喜欢</title></code>
+=== base ===
+  * <base target="_blank"> 可用场景：首页、频道等大部分链接都为新窗口打开的页面。
+=== link ===
+  * link用于引入css资源时，可省去media(默认为all)和type(默认为text/css)属性。<code html><link rel="stylesheet" href="css_example_url" /></code>
+=== style ===
+  * type默认为text/css，可以省去。
+=== script ===
+  * type属性可以省去，自Netscape 2起所有浏览器默认的编程语言已经都是JavaScript了。
+  * 不赞成使用lang属性，它被用于选择其它的程序语言或特殊版本的JavaScript。
+  * 不要使用古老的<html>&lt;!– //–&gt;</html>这种hack脚本。它用于阻止第一代浏览器（Netscape 1和Mosaic）将脚本显示成文字。<code html><script src="js_example_url"></script></code>
+=== noscript ===
+  * 在用户代理不支持JavaScript的情况下提供说明。
+
+==== 文本元素 ====
+=== a ===
+    * a 存在href属性时表示链接，无href属性但有name属性表示锚点。
+    * 当描述文字有可能会部分(如：宝贝描述)或全部被隐藏时，给a元素增加title属性。(玉伯提议删除此条，待进一步讨论)
+=== em, strong ===
+    * <html><sup><a href="#fn_em_&_strong">em_&_strong</a></sup></html>
+    * em 表示句意强调，加与不加会引起语义变化，可用于表示不同的心情或语调。
+    * strong 表示重要性强调，可用于局部或全局，strong强调的是重要性，不会改变句意。
+=== abbr ===
+    * 表示缩写。<code html>Organic food in Ireland is certified by the <abbr title="Irish Organic Farmers and Grow..">IOFGA</abbr>.</code>
+=== sub, sup ===
+    * 主要用于数学和化学公式，sup还可用于脚注。<code html>
+<var>E</var>=<var>m</var><var>c</var><sup>2</sup>
+f(<var>x</var>, <var>n</var>) = log<sub>4</sub><var>x</var><sup><var>n</var></sup></code>
+=== span ===
+    * span元素本身无特殊含义。
+=== ins, del ===
+    * 分别表示从文档中增加(插入)和删除。
+
+==== 媒体元素 ====
+=== img ===
+  * 请勿将img元素作为定位布局的工具，不要用他显示空白图片。
+  * 必要时给img元素增加alt属性<html><sup><a href="#fn_alt_guide">alt_guide</a></sup></html>。
+=== object ===
+  * 可以用来插入Flash。
+=== iframe ===
+
+==== 列表元素 ====
+=== dl ===
+  * 表示关联列表，dd是对dt的解释。
+  * dt和dd的对应关系比较随意：一个dt对应多个dd、多个dt对应一个dd、多个dt对应多个dd，都合法。
+  * 可用于：名词/单词解释、日程列表、站点目录。
+=== ul ===
+  * 表示无序列表。
+=== ol ===
+  * 表示有序列表。
+  * 可用于：排行榜。
+=== li ===
+  * 表示列表项，必须是ul/ol的子元素。
+
+==== 表格元素 ====
+  * 最佳代码示例如下：(TODO)
+
+==== 表单元素 ====
+  * 推荐使用button代替input(type为button、submit、image、reset)，且button必须声明type<html><sup><a href="#fn_html_tag_button">html_tag_button</a></sup></html>。
+  * 推荐使用fieldset，legend组织表单。
+  * 表单元素的name不能设定为action, enctype, method, novalidate, target, submit，会导致表单提交混乱。<html><span style="color:red;">(submit待考证)</span></html>
+
+===== 最佳实践 =====
+  * http://pamirs.taobao.ali.com:8080/  html类目
+
+
+
+
+
+
+===== 脚注 =====
+[<html><a name="fn_doctype">doctype</a></html>]\\
+选择这种doctype的理由：
+   - 简单好记
+   - 无兼容问题
+   - 源于HTML5
+参考文档：\\
+http://en.wikipedia.org/wiki/Document_type_declaration#HTML_5_DTDless_DOCTYPE \\
+http://ejohn.org/blog/html5-doctype/ \\
+http://hsivonen.iki.fi/doctype/ \\
+http://dancewithnet.com/2009/06/14/activating-browser-modes-with-doctype/ \\
+http://hsivonen.iki.fi/engines/ \\
+http://hixie.ch/advocacy/xhtml \\
+http://html5.validator.nu/ \\
+http://blog.hedgerwow.com/2008/10/16/choosing-a-doctype-that-is-just-simple-and-stric \\
+ \\
+[<html><a name="fn_charset_meta">charset_meta</a></html>]\\
+选择这种方法声明charset的理由：
+   - 简单好记
+   - 无兼容问题
+   - 源于HTML5
+   - 原声明方法为 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />，其中的mime-type为text/html在文档中没有意义，他是由Server端决定的
+参考文档：\\
+http://code.google.com/speed/articles/html5-performance.html \\
+\\
+[<html><a name="fn_alt_guide">alt_guide</a></html>]\\
+参考文档：\\
+http://www.gawds.org/show.php?contentid=28 \\
+http://www.w3.org/TR/html5/text-level-semantics.html#alt \\
+http://www.cs.tut.fi/~jkorpela/html/alt.html \\
+ \\
+[<html><a name="fn_html_semantics">html_semantics</a></html>]\\
+例： \\
+避免用table进行布局，但是，在描述数据时，该用table的时候就大胆的用； \\
+p表示段落，不能用来代替div布局； \\
+地址用address； \\
+。。。 \\
+ \\
+[<html><a name="fn_html_embed">html_embed</a></html>]\\
+例：p和dt里不能包含块级元素。详见：\\
+http://www.junchenwu.com/2007/01/allowed_nesting_of_elements_in_html_4_strict_and_xhtml_10_strict.html \\
+ \\
+[<html><a name="fn_html_tag_button">html_tag_button</a></html>]\\
+经测试：不指定type的button在IE6/7下默认type为button，其他浏览器默认type为submit。 \\
+扩展阅读： \\
+http://design.alibaba-inc.com/?q=node/1088 \\
+ \\
+[<html><a name="fn_em_&_strong">em_&_strong</a></html>]\\
+参考文档： \\
+http://lifesinger.org/blog/2008/12/the-different-of-em-and-strong/ \\
+上面链接已经失效，这里做个补充 -> http://wiki.ued.taobao.net/doku.php?id=team:vertical-guide:vmarkets-home:more-emorstrong
+\\
+[<html><a name="self_closing">self_closing</a></html>]\\
+自闭合元素包括 area, base, basefont, br, col, frame, hr, input, img, link, meta, param，语法为：<tagname />；其他的都是非自闭合元素，语法为：<tagname></tagname>。\\
+参考文档：\\
+http://dusan.fora.si/blog/self-closing-tags\\
+
+===== 参考文档 =====
+http://www.w3.org/TR/html4/\\
+http://www.w3.org/TR/html5/\\
+http://reference.sitepoint.com/html/\\

@@ -1,0 +1,33 @@
+====== JavaScript编程规范 ======
+
+阅读此规范之前，请确保已阅读 [[basic_guide|前端基本编程规范]]。
+
+===== TODO List=====
+<html>
+<ol class="todo">
+<li>文件说明与代码注释</li>
+<li>代码的推荐写法</li>
+<li>全局变量，局部变量、函数名的命名约定</li>
+<li>和YUI相关的默认约定</li>
+<li>Hacks的写法</li>
+<li>修改代码时的标注</li>
+</ol>
+</html>
+
+
+===== 其它建议 =====
+
+  * **尽量减少全局变量的使用。**不要让局部变量覆盖全局变量。
+  * 避免使用continue和break, 它们很容易使得程序的逻辑过程晦涩难懂。
+  * 避免使用with. 原因：[[http://yuiblog.com/blog/2006/04/11/with-statement-considered-harmful/|with Statement Considered Harmful]]
+  * eval是恶魔，无论是从性能还是安全性上考虑。尽量避免使用它。
+  * **不要吝啬空行**。尽量使用空行将逻辑相关的代码块分割开，以提高程序的可读性。
+
+<html>
+<p class="noteimportant">
+规范最重要的是执行。希望此规范，能有助于你在团队中的工作。<br />
+有任何改进建议，请随时联系玉伯。
+</p>
+</html>
+
+{{tag>f2e 前端规范 javascript js}}

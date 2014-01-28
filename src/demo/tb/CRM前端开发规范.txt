@@ -1,0 +1,116 @@
+====== CRM前端开发规范 ======
+<html>
+<p class="notetip">CRM前端开发规范</p>
+</html>
+
+
+
+
+
+===== 基础规范 =====
+
+====文档声明====
+<code><!DOCTYPE HTML></code>
+[[http://www.cnblogs.com/oneroundseven/archive/2011/03/18/1987801.html|为什么使用<!DOCTYPE HTML>]]
+
+
+
+
+====文件,id,class命名规范====
+文件，id,class命名规范请参考[[group:f2e:standard:basic_guide]]，以下两点请特别注意：
+  - 文件，id和class名称一律小写，多个单词用连字符连接
+  - 仅在JavaScript中当作hook用的id和class, 命名规则为J_UpperCamelCase（请注意，J_ 后的首字母也大写！）, 其中字母J代表JavaScript, 也是钩子（hook）的象形。注意：如果在JavaScript和CSS中都需要用到，则不用遵守本约定，例如KISSY Components中用到的 **ks-overlay** 等等..
+
+====文件编码====
+  * js/css文件编码统一使用utf-8。
+  * 显示引用js,css，必须强制指定charset
+  * KISSY packages 配置，显示指定charset:utf-8
+
+====AMD规范====
+AMD 规范是JavaScript开发的一次重要尝试，它以简单而优雅的方式统一了JavaScript的模块定义和加载机制，并迅速得到很多框架的认可和采纳。这对开发人员来说是一个好消息，通过AMD我们降低了学习和使用各种框架的门槛，能够以一种统一的方式去定义和使用模块，提高开发效率，降低了应用维护成本。
+KISSY loader是[[http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition|AMD]]规范的一种实现
+  * CRM中所有模块必须使用KISSY loader注册，引用
+  * 是用包配置
+  * 不允许使用全局变量
+
+
+
+
+
+
+
+
+
+===== 编码规范 =====
+
+====文档声明====
+
+
+
+
+
+
+===== 前后端交互规范 =====
+
+====配置约定====
+
+<code>
+KISSY.use("crm", function(S, CRM){
+	CRM.addMod({
+		name: "crm/home/news",
+		requires:{
+        	"crm/home/news":{
+       			requires:["./hotnews", "template"]
+        	}
+        },
+	data: {
+            "box":"#J_News",
+            "data":"news.do"
+            "data": {
+		//可以传入其他数据
+            }
+        },
+	global: {
+		//全局变量
+	}
+  })
+});
+</code>
+
+====数据格式约定====
+无论是AJAX还是JSONP请求，后端都使用以下格式返回数据，方便前端统一处理。
+\\ 
+**通用格式**
+<code>
+{
+   //请求状态，失败/成功/其他
+   status: 0/1/other,
+   //此次请求的提示信息，一般失败才有
+   message: "提示信息",
+   //错误码，前台根据错误码打印错误信息，如果有的话
+   code: "错误码",
+   //此次请求的数据
+   data: {
+      //返回的数据体
+   }
+}
+</code>
+
+**带有分页格式** \\
+<code>
+{
+   status: 0/1/other,
+   message: "",
+   code: "",
+   data: {
+	//当前页码
+	"index":1,
+	//每页显示的数量
+	"pagesize":20,
+	//总数
+	"total":300,
+	//数据集
+	"list":[{..},{..},..]
+   }
+}
+</code>

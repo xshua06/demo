@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title></title>
+</head>
+<body>
+	<script>
+		(function(){
+			var autoFixIframeHeight = {
+				getRequest: function(name) {
+					var reg = new RegExp("(?:^|&)" + name + "=([^&]*)(?:&|$)", "i"),
+						arr = window.location.search.substr(1).match(reg);
+					return arr ? unescape(arr[1]) : "";
+				},
+				doFix: function(){
+					var self = this;
+					var height = self.getRequest("data-iframeheight");
+					try {
+						var iframeEl = window.top.document.getElementById(self.getRequest("data-iframeid"));
+						if (!iframeEl) return;
+						iframeEl.style.height = height + 'px';
+					}catch(e){}
+				}
+		
+			}
+		
+			autoFixIframeHeight.doFix();
+		})();
+	</script>
+</body>
+</html>

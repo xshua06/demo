@@ -1,0 +1,149 @@
+====== CSS编码规范 ======
+
+阅读此规范之前，请确保已阅读 [[group:f2e:standard:basic_guide|前端基本编程规范]]。
+
+
+
+
+===== 多行和单行模式 =====
+
+有多个属性声明时，推荐分隔成多行：
+<code css>
+.new-product {
+    font-weight: bold;
+    color: red;
+    text-decoration: underline;
+}
+</code>
+
+仅有少数几个属性声明，放在同一行不超过120个字符时，可以采用单行模式：
+<code css>
+.item-pic { display: block; margin: 0 auto 5px; }
+</code>
+
+
+===== 空白 =====
+
+  * 用逗号（,）隔开多个选择器或属性值时，逗号后推荐紧跟一个空格。
+  * 属性名和属性值间用冒号（:）隔开，冒号前无空格，冒号后紧跟一个空格。
+  * 多个属性值之间用一个空格隔开。
+
+
+===== z-index 约定 =====
+
+  * 普通应用：1 - 999
+  * 悬浮菜单：1000 - 4999
+  * 模态窗口：5000 - 9999
+
+
+
+
+
+===== CSS框架结构 =====
+
+当有新的垂直站需要搭建时，CSS的代码框架的组织需要做到分清楚层次，这种分层是经过大量实践得出的最优方案，推荐按照这种思路来组织你的全局CSS编码和CSS样式之间的解偶
+
+约定：产品的CSS框架至少包括（全局、产品、页面私有）这三层，且顺序从全局到私有自上而下。 如：
+<code html>
+<link rel="stylesheet" type="text/css" href="^/css/global.css">
+<link rel="stylesheet" type="text/css" href="^/css/productname.css">
+<link rel="stylesheet" type="text/css" href="^/css/pagename.css">
+</code>
+
+===== CSS基本规则 =====
+
+  - CSS符合浏览器兼容标准；
+  - 全部小写，且每一项CSS定义写成一行；
+  - 不允许将样式的定义写在标签中（如：style=“font-color:red;”）；
+  - CSS命名要符合命名原则；
+  - 所有装饰性的图片（如背景图），要定义在CSS中，尽量合并背景图，以减少HTTP请求数；
+  - ID是唯一的，且用在结构的定义中；
+  - CSS文件要按照CSS框架的要求分层；
+  - CSS文件发布前要进行压缩。
+
+===== CSS书写标准 =====
+
+全局注释采用这种写法，多是一个分类的起始位置或者一个css文件的开头，用以注明css文件的作者和用途
+
+<code css>/* -------------------------------------------------
+ * 像这样
+ * 复杂描述
+ * 类似于这样
+ * -------------------------------------------------
+ */</code>
+
+简短的注释就直接这样写即可：
+
+<code css>/* 简短注释 */</code>
+
+
+共用属性写法：
+
+<code css>selector, selector2, selector3 {
+    property:value;
+    property:value;
+    property:value;
+}</code>
+
+
+使用同一命名方式的（CSS namespace containers）放在一起：
+
+<code css>#header h3   { property:value; }
+#header p    { property:value; }
+#header img  { property:value; }
+#header cite { property:value; }
+</code>
+
+===== CSS命名规范 =====
+
+  - 命名充分体现语义化；
+  - class全部小写、中横线（"-"）链接多单词，尽量做到简洁易读（懂），单词选用避开生僻单词；
+  - 未避免与全局样式和淘宝现有产品产生混淆及冲突，class命名采用 <span style="color: red;">c-产品代号-模块名</span>（c来源于cubee的首字母）；
+  - 用作钩子的id或者class默认选用 <span style="color: red;">J_产品代号_命名</span> （沿用Tbra规范）。
+
+===== hack的写法 =====
+
+<code css>#abc {  
+border:2px solid #00f; /*ff的属性*/ 
+border:2px solid #090\9; /* IE6/7/8的属性 */ 
+border:2px solid #F90\0; /* IE8支持的属性 */ 
+*border:2px solid #F90; /* IE6/7 支持的属性*/
+_border:2px solid #f00; /*IE6的属性*/ 
+}  
+/*上下顺序不可以写错*/ 
+</code>
+
+
+===== CSS命名元素/属性缩写 =====
+^Class^解释 ^ Class^解释^
+| hd | Header头部 | mod | module模块 |
+| bd | Body主体 | main | 主 |
+| ft | Footer底部 | sub | 次 |
+| side | Sidebar边栏 | box | 盒子 |
+| nav | Navigation导航 | con | content内容 |
+| bar | Line-module 条状模块 | form | 表单 |
+| tl/tr/bl/br | 上左/上右/下左/下右 | t/r/b/l | 上/右/下/左 |
+| ad | 广告 | load | 加载 |
+| col | 栏目 | err | Error 错误 |
+| lst | List列表 | ok | Correct 正确 |
+| tit | Title 标题 | btn | 按钮 |
+| it | Input[text] | ic | Input[checkbox] |
+
+===== TODO List=====
+<html>
+<ol class="todo">
+<li>文件说明与代码注释</li>
+<li>Declarations的组织</li>
+<li>Selector的写法</li>
+<li>Rules的书写顺序</li>
+<li>Hacks的写法</li>
+<li>修改时的标注</li>
+</ol>
+</html>
+
+<html>
+<p class="noteimportant">
+规范最重要的是执行。希望此规范，能有助于你在团队中的工作。<br />
+有任何改进建议，请随时联系拔赤。
+</p>
+</html>

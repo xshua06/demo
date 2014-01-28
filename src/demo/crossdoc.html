@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>html5 跨文档通信</title>
+	</head>
+	
+	<body>
+		<script src="http://g.tbcdn.cn/kissy/k/1.4.1/seed.js"></script>
+		<iframe src="crossdoc-iframe.html"></iframe>
+		<h3>子窗口回传的信息</h3>
+		<div id="msg"></div>
+		<button id="send">发消息</button>
+		<script>
+			(function(win){
+				document.querySelector("#send").onclick = function(){
+					win.frames[0].postMessage("给子窗口发送消息", "*");
+				}
+				
+				win.onmessage = function(e){
+					document.querySelector("#msg").innerHTML = e.data;
+				}
+			})(window);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>iframe高度自适应</title>
+		<style>
+			html, body{
+				overflow:hidden;
+			}
+			*{
+				margin:0;
+				padding:0;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div id="conHeight" style="background:#eee;">
+			<button id="gao">点击增高</button>
+		</div>
+		<script src="http://demo.net/src/demo/fixiframeheight.js" data-iframeid="crossiframe" data-proxy="http://demo.net/src/demo/iframeproxy.html" data-fixheight="0"></script>
+		<script>
+			(function(win){
+				var $ = function(id){return document.querySelector(id)};
+				
+				var h = $("#conHeight").offsetHeight;
+				$("#gao").onclick = function(){
+					$("#conHeight").style.height = 2 * h + "px";
+					h = 2 * h;
+				}
+			})(window);
+		</script>
+	</body>
+</html>

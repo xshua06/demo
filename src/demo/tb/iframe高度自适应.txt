@@ -1,0 +1,143 @@
+=====iframe跨域高度自适应=====
+
+  采用JavaScript来控制iframe元素的高度是iframe高度自适应的关键，同时由于JavaScript对不同域名下权限的控制，引发出同域、跨域两种情况。
+  
+  由于客户端js使用浏览器的同源安全策略，跨域情况下，被嵌套页面如果想要获取和修改父页面的DOM属性会出现权限不足的情况，
+  
+  提示错误：Permission denied to access property 'document'。这是因为除了包含脚本的文档载入的主机外，
+  
+  同源策略禁止客户端脚本链接到其他任何主机或者访问其他任何主机的数据。
+  
+  这意味着访问一个web服务的javascript代码通常只有在它也驻留在Web服务本身所在的同一个服务器的时候才有用。
+  
+  所以在跨域情况下，我们遇到的问题就是：父窗口无法获得被嵌套页面的高度,而且被嵌套页面也无法通过驻留在其服务器上的js修改父窗口Dom节点的属性。
+  
+  所以我们需要一个媒介，来获得被嵌套页面的高度同时又能修改主界面iframe节点的高度。
+
+
+====思路====
+
+现有主界面main在域a下，被嵌套页面B在域b下，被嵌套页面B又嵌套一个在域a下的中介页面A。 当用户打开浏览器访问mail.html的时候载入B，触发B的onload事件获取其自身高度,  
+然后B载入A,并将高度值作为参数赋值给A的location对象。这样A就可以通过location.hash获得B的高度。
+（location是javascript里边管理地址栏的内置对象，比如location.href就管理页面的url，用location.href=url就可以直接将页面重定向url。
+而location.hash则可以用来获取或设置页面的标签值。比如http://domain/#admin的location.hash="#admin"。利用这个属性值可以做一些非常有意义的事情。）。
+由于A和main页面同域，所以可以修改main的dom节点属性，从而达到我们设置iframe标签高度的目的
+{{:user:xiaotao:1322019224824.png|}}
+
+===iframe主页面：main.html===
+<code html>
+<iframe id="iframeB"  name="iframeB" src="www.b.com/B.html" width="100%" height="auto" scrolling="no" frameborder="0"></iframe>
+</code>
+===iframe嵌套页面：B.html===
+<code javascript>
+<iframe id="iframeA" name="iframeA" src="" width="0" height="0" style="display:none;" ></iframe> 
+<script type="text/javascript">
+function sethash(){
+  hashH = document.documentElement.scrollHeight; //获取自身高度
+  urlC = "www.a.com/A.html"; //设置iframeA的src
+  document.getElementById("iframeA").src=urlC+"#"+hashH; //将高度作为参数传递
+}
+window.onload=sethash;
+</code>
+===中介页面：A.html===
+<code javascript>
+<script>
+function pseth() {
+  var iObj = parent.parent.document.getElementById('iframeB');//A和main同域，所以可以访问节点
+  iObjH = parent.parent.frames["iframeB"].frames["iframeA"].location.hash;//访问自己的location对象获取hash值
+  iObj.style.height = iObjH.split("#")[1]+"px";//操作dom
+}
+pseth();
+</script>
+</code>
+=====子域下的跨域问题=====
+除了jsonp的解决方案，可以采用设置document.domain来实现对子域下的内容访问
+====原理====
+通过给主页面跟请求页面设置相同的document.domain来，欺骗浏览器，达到Ajax跨子域的效果，此方法在IE，chrome，Firefox，Safari，Opera下测试通过
+
+**缺点：**无法实现不同主域名之间的通讯。并且当在一个页面中还包含有其它的iframe时，会产生安全性异常，拒绝访问。
+
+
+首先：假设首页面地址www.taobao.com/index.html。iframe要加载的地址:nvzhuang.taobao.com下的test.html
+我们需要在主页面中设置document.domain为taobao.com，然后主页面添加一个iframe，src为域名nvzhuang.taobao.com下的一个url，
+在iframe页面中同样设置document.domain为taobao.com.
+示例代码如下：
+ **index.html**
+<code html>
+<div id="container"></div>
+<iframe src="http://nvzhuang.taobao.com/test.html" id="iframe" style="display:none;"></iframe>
+<script type="text/javascript">
+document.domain = 'taobao.com';
+function crossDomain(){
+    var iframe=document.getElementById('iframe').contentWindow.$;        
+    iframe.get("http://nvzhuang.taobao.com/iframe.txt",function(data){
+        document.getElementById("container").innerHTML=data;
+    });
+}
+</script>
+</code>
+ **test.html**
+<code html>
+<script type="text/javascript">
+  document.domain = 'taobao.com';
+</script>
+</code>
+=====使用html5 postMessage和window.name实现多浏览器跨域=====
+====html5 postMessage实现跨域====
+postMessage是html5的一个新功能，可以实现不同域名之间的通信，通过给postMessage方式发送数据，监听则通过在父子窗口添加onmessage事件进行。
+缺点也就很明显了，只有支持html5的浏览器才支持这种跨域方式，像IE6、7当然就拒之门外了！目前支持这个API的浏览器有：
+Firefox, IE8+, Opera, Safari, Chrome。postMessage允许页面中的多个iframe/window的通信，postMessage也可以实现ajax直接跨域，不通过服务器端代理
+
+直接上源码
+**跨域发送端**
+<code javascript>
+function send(){
+	var val = document.getElementById('data').value;
+	sendMessage(val);
+}
+sendMessage=function(data){
+        if(window.postMessage){
+                var ifr = doc.getElementById('iframeA').contentWindow;
+                ifr.postMessage(data,'*')//*未作域名限制，如果需要可以添加
+        }
+}
+</code>
+**监听端**
+<code javascript>
+var cb=function(json){
+        alert("get msg:"+json);
+}
+(function(){
+        if(window.postMessage){
+                if(window.addEventLister){
+                       window.addEventListener("message",function(e){
+                              cb.call(window,e.data);
+                       },false)
+                }else{
+                       window.attachEvent("onmessage",function(e){
+                              cb.call(window,e.data);
+                       })
+                }
+        }else{//利用window.name兼容ie6,7
+		var hash = '';					
+		setInterval(function(){					
+			if (win.name !== hash) {
+				hash = win.name;
+				cb.call(win, hash);
+			}
+		}, 50);
+		return function(data){
+			ifr.name = data;
+		};
+	}
+})
+</code>
+<html>
+  <div><span style="font-weight:700;color:blue">window.name</span>有个很重要的特性：页面的url改变而name不改变的特性</div>
+</html>
+=====CORS(Cross-Origin Resource Sharing跨域=====
+这里不在详细叙说。。可以看下
+
+[[http://www.nczonline.net/blog/2010/05/25/cross-domain-ajax-with-cross-origin-resource-sharing/|Nicholas C. Zakas的CORS]]
+
+[[http://www.kimhou.com/?p=222|使用CORS来进行跨域AJax请求[中文版]]]

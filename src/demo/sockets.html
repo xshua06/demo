@@ -2,38 +2,52 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>html5 web MessageChannel</title>
+		<title>html5 web sockets</title>
 	</head>
 	
 	<body>
+		<h3>web sockets</h3>
+		<p>服务器端和客户端之间的双向通信</p>
+		
 		<script src="http://g.tbcdn.cn/kissy/k/1.4.1/seed.js"></script>
 		<script>
-			(function(win){
-				var server, handler, events;
-				
-				events = {
-					onconnect: function(){
+			(function(){
+				var server = { 
 					
-					},
-					onopen: function(){
-					
-					},
-					onclose: function(){
-					
-					}
-				}
-				server = {
-					connect: function(){
+					connect: function(wsurl){
+						var self = this;
+						if(!wsurl) return;
+						// 创建 WebSockets 并传入 WebSockets server 地址
+						self.ws = new WebSocket(wsurl); 
+						
+						self.ws.onmessage = self._onmessage; 
+						
+						//WebSockets 还提供了 onopen 以及 onclose 事件
+						self.ws.onopen = self._onopen; 
+						self.ws.onclose = self._onclose;
+						
+					}, 
+					send: function(message){
+						var self = this;
+						if(self.ws && message){
+							self.ws.send(message);
+						}
+					}, 
+					_onmessage: function(event){
 						
 					},
-					close: function(){
-					
+					_onopen: function(){
+						var self = this;
+						self._send("Client:Open WebSockets," + new Date());
+					},
+					_onclose: function(){
+						var self = this;
+						self.ws = null;
 					}
-				};
 					
-			})(window);
-			
-			
+				};
+				
+			})();
 		</script>
 	</body>
 </html>

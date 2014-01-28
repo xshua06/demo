@@ -7,6 +7,16 @@
 	
 	<body>
 		<h3>不同线程间通信</h3>
+		
+		<h3>web worker总结：</h3>
+		<b>优点：</b><br />
+		1.可以加载一个JS进行大量的复杂计算而不挂起主进程，并通过postMessage，onmessage进行通信<br />
+		<b>局限性：</b><br />
+		1.不能跨域加载JS<br />
+		2.worker内代码不能访问DOM<br />
+		3.各个浏览器对Worker的实现不大一致，例如FF里允许worker中创建新的worker,而Chrome中就不行<br />
+		综上所述：web worker目前所能做的(应该说是最适合的)也就是新开辟一个线程去计算大数据或者处理并发事件，而不影响主线程进程。
+
 		<script>
 			(function(win){
 				var wk, 
