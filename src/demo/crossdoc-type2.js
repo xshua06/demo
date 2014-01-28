@@ -1,6 +1,15 @@
 (function($){
-	var cross, state, storage, timeoutid, listenFn = [];
+	var cross, 
+		state, 
+		storage, 
+		timeoutid, 
+		listenFn = [];
+	
+	/*
+	* 设置、获取跨窗口通信状态
+	*/
 	state = {
+		//设置状态
 		set: function(name, value){
 			if(name){
 				if(typeof localStorage == "undefined"){								
@@ -10,6 +19,8 @@
 				}
 			}
 		},
+		
+		//获取状态
 		get: function(name){
 			var cookies, start, end, str;
 			if(!name) return;
@@ -25,6 +36,8 @@
 				return localStorage[name];
 			}
 		},
+		
+		//销毁状态
 		destory: function(name){
 			if(typeof localStorage == "undefined"){
 				document.cookie = name + '=; expires=' + (new Date('1970-01-01')).toGMTString();
@@ -34,9 +47,18 @@
 		}
 	}
 	
+	/*
+	* 跨窗口通信接口
+	* 
+	*/
 	cross = {
+		//旧状态值
 		oldValue: state.get("__statechange__"),
+		
+		//新状态值
 		newValue: state.get("__statechange__"),
+		
+		//add监听函数
 		addListener: function(fn){
 			typeof fn == "function" && listenFn.push(fn);
 		},
