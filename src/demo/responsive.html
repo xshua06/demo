@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>自适应布局、响应式布局</title>
+		<meta charset="utf-8" />
+		
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}			
+			.wrap{
+				width:100%;
+				overflow:hidden;
+				background-color:#ECECFB;
+			}
+			.left{
+				float:left;
+				width:30%;
+				background-color:#FF0000;
+			}
+			.left-wrap{
+				margin-right:10px;
+				background-color:#DBDBEA;
+			}
+			.right{
+				float:left;
+				width:70%;
+				background-color:#EEEEEE;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="wrap">
+			<div class="left">
+				<div class="left-wrap">aaa left</div>
+			</div>
+			<div class="right">bbb right</div>
+		</div>
+	</body>
+</html>

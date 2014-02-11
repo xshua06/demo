@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="utf-8" />
+	<title>Equal Height Columns with CSS</title>
+<style type="text/css">
+.container{
+    zoom:1; /* for IE6 */
+    overflow:hidden;
+}
+.col{
+    float:left; 
+    padding-bottom:3000px;
+    margin-bottom:-3000px; 
+}
+
+.col-a{ 
+    width:240px;
+    background:#FDFD97;
+}
+.col-b{
+    width:280px;
+    background:lightgreen;
+}
+.col-c{
+    width:320px;
+    background:#E0DCDC;
+}
+</style>
+</head>
+<body>
+<p>
+工作中时常会碰到一种布局需求，即一行有两列或多列内容，且每一列的高度是不定的，但是我们希望无论内容多少，<br />
+每一列看起来始终是一样高的（等于最高列的高度）。当列数比较少时，例如两列，我们可以选择使用一张背景图垂直平铺来解决，<br />
+但是当列数比较多时呢？如果再用图片就显得不太妥当。这里展示一种不用背景图、不用hack、不用JavaScript的方法。
+</p>
+<p>
+这个布局技巧的原理是：我们设置每一列的padding-bottom足够大（根据盒模型，背景色存在于padding上），<br />
+但这撑大了外层容器的高度，接着我们通过设置列的margin-bottom为负值（绝对值与padding-bottom相等），<br />
+并且外层容器的overflow为hidden，使容器高度回到原有值，它截断了每一列，这看起来就是我们想要的效果。
+</p>
+
+<div class="container">
+    <div class="col col-a">
+        <h2>The Book of Genesis</h2>
+        <p>In the beginning God created the heavens and the earth.</p>
+        <p>Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.</p>
+    </div>
+    <div class="col col-b">
+        <h2>The Book of Genesis</h2>
+        <p>In the beginning God created the heavens and the earth.</p>
+        <p>Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.</p>
+        <h2>The Book of John</h2>
+        <p>In the beginning was the Word, and the Word was with God, and the Word was God.</p>
+        <p>He was with God in the beginning.</p>
+    </div>    
+    <div class="col col-c">
+        <h2>The Book of Genesis</h2>
+        <p>In the beginning God created the heavens and the earth.</p>
+        <p>Now the earth was formless and empty, darkness was over the surface of the deep, and the Spirit of God was hovering over the waters.</p>
+        <h2>The Book of John</h2>
+        <p>In the beginning was the Word, and the Word was with God, and the Word was God.</p>
+        <p>He was with God in the beginning.</p>
+        <h2>The Book of Revelation</h2>
+        <p>The revelation of Jesus Christ, which God gave him to show his servants what must soon take place. He made it known by sending his angel to his servant John,</p>
+        <p>who testifies to everything he saw--that is, the word of God and the testimony of Jesus Christ.</p>
+    </div>
+</div>
+</body>
+</html>
+

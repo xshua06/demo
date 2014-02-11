@@ -1,0 +1,62 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>让position:fixed在IE6下可用</title>
+		<meta charset="utf-8" />
+		
+		<style>
+			*{
+				margin:0;
+				padding:0;
+			}
+			/* 让position:fixed在IE6下可用 */
+			
+			/* 
+			* 头部固定
+			* 除IE6的主流浏览器通用的方法
+			*/
+			.a{
+				position:fixed;bottom:auto;top:0px;
+			}
+			
+			/* 修正IE6振动bug */
+			html, body{
+				background-image:url(about:blank);
+				background-attachment:fixed;
+			}
+			
+			/* IE6 头部固定 */
+			/*
+			* eval语句用于解决缓存的问题
+			*/
+			.a{
+				background:#eee;
+				height:30px;
+				width:100%;
+				position:absolute;
+				bottom:auto;
+				top:expression(eval(document.documentElement.scrollTop));
+			}
+			
+			.b{
+				height:100000px;
+				padding:40px 10px 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="a"></div>
+		<div class="b">
+			<p>众所周知IE6不支持position:fixed，这个bug与IE6的双倍margin和不支持PNG透明等bug一样臭名昭著。前些天我做自己的博客模板的时候，遇到了这个问题。当时就简单的无视了IE6——尽管有几个使用IE6的朋友，一起BS我……但是对于大项目或商业网站，如果有用到这个属性的时候，是不可能直接无视的。</p>
+			<h3>你是如何让position:fixed在IE6中工作的？</h3>
+			<p>本文所使用的技巧是用了一条Internet Explorer的CSS表达式(expression)。你不可以直接使用该表达式，因为它可能会因为缓存而不更新。解决这一点的最简单的方式是使用<code>eval</code>包裹你的语句。</p>
+			<h3>如何解决“振动”的问题？</h3>
+			<p>显然IE有一个多步的渲染进程。当你滚动或调整你的浏览器大小的时候，它将重置所有内容并重画页面，这个时候它就会重新处理css表达式。这会引起一个丑陋的“振动”bug，在此处固定位置的元素需要调整以跟上你的(页面的)滚动，于是就会“跳动”。</p>
+			<p>解决此问题的技巧就是使用<code>background-attachment:fixed</code>为body或html元素添加一个background-image。这就会强制页面在重画之前先处理CSS。因为是在重画之前处理CSS，它也就会同样在重画之前首先处理你的CSS表达式。这将让你实现完美的平滑的固定位置元素！</p>
+			<p>这个方案并不是我提供的。我是在网上的某个地方读到这些的。如果你知道是谁原创了这个方法，请告诉前端观察。</p>
+			<p>我发现的另外一个小技巧是，你根本无需一个真实的图片！你可以使用一个<code>about:blank</code>替代一个spacer.gif图片，而且它工作的同样出色。</p>
+		</div>
+	</body>
+</html>

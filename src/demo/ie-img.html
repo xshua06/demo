@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>IE下img多余5像素空白</title>
+		<meta charset="utf-8" />
+		
+		<style>
+			ul,li{
+				list-style:none;
+				padding:0;
+				margin:0;
+			}
+			li, .li{
+				border:1px solid #007FFF;
+				background-color:#EEE;
+				zoom:1;
+			}
+			img{
+				border:none;
+				vertical-align:middle; //去除多余空白
+			}
+			.a img{
+				height:100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<ul>
+			<li><a href="#"><img src="http://img.qianduan.net/uploads/ad/qianduan_weixin.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="http://img.qianduan.net/uploads/ad/qianduan_weixin.jpg" alt="" /></a></li>
+		</ul>
+		<div class="li">
+			<a href="#"><img src="http://img.qianduan.net/uploads/ad/qianduan_weixin.jpg" alt="" /></a>
+		</div>
+	</body>
+</html>
